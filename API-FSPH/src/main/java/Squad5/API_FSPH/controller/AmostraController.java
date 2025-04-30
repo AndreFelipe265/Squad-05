@@ -5,6 +5,7 @@ import Squad5.API_FSPH.service.AmostraService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -22,7 +23,7 @@ public class AmostraController {
     @PostMapping
     ResponseEntity<Amostra> createAmostra(@RequestBody CreateAmostraDto createAmostraDto){
         amostraService.createAmostra(createAmostraDto);
-        return null;
+        return ResponseEntity.created(URI.create("v1/Amostra/" + amostraId.toString())).build();;
     }
 
     @GetMapping("/{idProtocolo}")

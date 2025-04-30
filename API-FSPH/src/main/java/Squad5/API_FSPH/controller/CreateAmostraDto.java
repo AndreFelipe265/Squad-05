@@ -4,5 +4,5 @@ import java.util.UUID;
 import java.time.LocalDate;
 
 public record CreateAmostraDto(UUID idProtocolo,String tipo,LocalDate dataCadastro,String dataColeta,String localColeta,
-                               String municipioNome,UUID minicipioID,String protocoloLote,String Status,String ObsStatus) {
+                               String municipioNome,UUID municipioID,String protocoloLote,String Status,String ObsStatus) {
 }
