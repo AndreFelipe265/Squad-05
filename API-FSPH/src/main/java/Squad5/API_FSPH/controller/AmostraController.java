@@ -14,7 +14,7 @@ import java.util.List;
 public class AmostraController {
     //declarar metodos (post/get/put/delete) e seus comportamentos
 
-    private AmostraService amostraService;
+    private final AmostraService amostraService;
 
     public AmostraController(AmostraService amostraService) {
         this.amostraService = amostraService;
@@ -22,13 +22,13 @@ public class AmostraController {
 
     @PostMapping
     ResponseEntity<Amostra> createAmostra(@RequestBody CreateAmostraDto createAmostraDto){
-        amostraService.createAmostra(createAmostraDto);
-        return ResponseEntity.created(URI.create("v1/Amostra/" + amostraId.toString())).build();;
+        var amostraId = amostraService.createAmostra(createAmostraDto);
+        return ResponseEntity.created(URI.create("v1/Amostra/" + amostraId.toString())).build();
     }
 
     @GetMapping("/{idProtocolo}")
     ResponseEntity<Amostra> getAmostraByID(@PathVariable("idProtocolo") String idProtocolo){
-        var amostra = amostraService.getAmostraById(idProtocolo);
+        var amostra = amostraService.getIdProtocolo(idProtocolo);
         if (amostra.isPresent()){
           return ResponseEntity.ok(amostra.get());
         }else {

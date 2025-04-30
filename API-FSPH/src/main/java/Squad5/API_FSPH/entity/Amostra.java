@@ -15,8 +15,9 @@ public class Amostra {
     @GeneratedValue(strategy = GenerationType.UUID) //alterar dps pro protocolo
     private UUID idProtocolo;
 
-    @Column(name = "tipo")
-    private String tipo;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo") //alterar para enum!!
+    private Tipo tipo;
 
     @Column(name = "dataCadastro") //usar o tipo de Instant?
     private Date dataCadastro;
@@ -46,7 +47,7 @@ public class Amostra {
     public Amostra() {
     }
 
-    public Amostra(UUID idProtocolo, String tipo, Date dataCadastro, String dataColeta, String localColeta, String municipioNome, UUID municipioId, String protocoloLote, String status, String obsStatus) {
+    public Amostra(UUID idProtocolo, Tipo tipo, Date dataCadastro, String dataColeta, String localColeta, String municipioNome, UUID municipioId, String protocoloLote, String status, String obsStatus) {
         this.idProtocolo = idProtocolo;
         this.tipo = tipo;
         this.dataCadastro = dataCadastro;
@@ -67,11 +68,11 @@ public class Amostra {
         this.idProtocolo = idProtocolo;
     }
 
-    public String getTipo() {
+    public Tipo getTipo() {
         return tipo;
     }
 
-    public void setTipo(String tipo) {
+    public void setTipo(Tipo tipo) {
         this.tipo = tipo;
     }
 

@@ -4,7 +4,6 @@ import Squad5.API_FSPH.controller.CreateAmostraDto;
 import Squad5.API_FSPH.controller.UpdateAmostraDto;
 import Squad5.API_FSPH.entity.Amostra;
 import Squad5.API_FSPH.repository.AmostraRepository;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -60,24 +59,23 @@ public class AmostraService {
             var amostra = amostraEntity.get();
 
             if (updateAmostraDto.ObsStatus() != null) {
-                amostra.setUsername(updateAmostraDto.ObsStatus());
+                amostra.setObsStatus(updateAmostraDto.ObsStatus());
             }
 
             if (updateAmostraDto.dataColeta() != null) {
-                amostra.setUsername(updateAmostraDto.dataColeta());
+                amostra.setDataColeta(updateAmostraDto.dataColeta());
             }
 
             if (updateAmostraDto.localColeta() != null) {
-                amostra.setUsername(updateAmostraDto.localColeta());
+                amostra.setLocalColeta(updateAmostraDto.localColeta());
             }
 
             if (updateAmostraDto.Status() != null) {
-                amostra.setUsername(updateAmostraDto.Status());
+                amostra.setStatus(updateAmostraDto.Status());
             }
+
+            amostraRepository.save(amostra);
         }
-
-
-        amostraRepository.save(idProtocolo);
     }
 
     public void deleteById(String idProtocolo) {
