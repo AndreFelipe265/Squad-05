@@ -7,5 +7,6 @@ public enum Tipo {
     Escorpiao,
     Larvas,
     Mosquito,
-    LaminasPCE
+    LaminasPCE;
+
 }

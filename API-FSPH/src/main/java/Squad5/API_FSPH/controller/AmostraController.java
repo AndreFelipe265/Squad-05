@@ -9,7 +9,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/idProtocolo")
+@RequestMapping("/v1/Amostra")
 //declarar que é um arquivo de controler, declarar caminho,
 public class AmostraController {
     //declarar metodos (post/get/put/delete) e seus comportamentos
@@ -30,7 +30,7 @@ public class AmostraController {
     ResponseEntity<Amostra> getAmostraByID(@PathVariable("idProtocolo") String idProtocolo){
         var amostra = amostraService.getIdProtocolo(idProtocolo);
         if (amostra.isPresent()){
-          return ResponseEntity.ok(amostra.get());
+            return ResponseEntity.ok(amostra.get());
         }else {
             return ResponseEntity.notFound().build();
         }

@@ -1,6 +1,8 @@
 package Squad5.API_FSPH.entity;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 
@@ -15,8 +17,7 @@ public class Amostra {
     @GeneratedValue(strategy = GenerationType.UUID) //alterar dps pro protocolo
     private UUID idProtocolo;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "tipo") //alterar para enum!!
+    @Column(name = "tipo")
     private Tipo tipo;
 
     @Column(name = "dataCadastro") //usar o tipo de Instant?
@@ -32,7 +33,6 @@ public class Amostra {
     private String municipioNome;
 
     @Column(name = "municipioId")
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID municipioId;
 
     @Column(name = "protocoloLote")
