@@ -1,22 +1,19 @@
 package Squad5.API_FSPH.service;
 
-import Squad5.API_FSPH.controller.CreateAmostraDto;
-import Squad5.API_FSPH.controller.UpdateAmostraDto;
+import Squad5.API_FSPH.dto.CreateAmostraDto;
+import Squad5.API_FSPH.dto.UpdateAmostraDto;
 import Squad5.API_FSPH.entity.Amostra;
 import Squad5.API_FSPH.entity.Tipo;
 import Squad5.API_FSPH.exception.BusinessRuleException;
-import Squad5.API_FSPH.exception.InvalidOperationException;
 import Squad5.API_FSPH.repository.AmostraRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -28,186 +25,145 @@ public class AmostraService {
         this.amostraRepository = amostraRepository;
     }
 
-    // ==================== MÉTODOS PRINCIPAIS ====================
-
+    /**
+     * Cria uma nova amostra com base nos dados do DTO.
+     */
     @Transactional
-    public UUID createAmostra(CreateAmostraDto createAmostra) {
-        validarDadosObrigatorios(createAmostra);
-        validarTipo(createAmostra.tipo());
-        validarCompatibilidadeLaminasPCE(createAmostra.protocoloLote(), createAmostra.tipo());
+    public String criarAmostra(CreateAmostraDto dto) {
+        validarDados(dto);
+        validarLaminasPCE(dto.protocoloLote(), dto.tipo());
 
-        UUID protocolo = createAmostra.idProtocolo() != null ? createAmostra.idProtocolo() : UUID.randomUUID();
+        Amostra amostra = new Amostra();
+        amostra.setProtocolo(gerarProtocolo());
+        amostra.setTipo(dto.tipo());
+        amostra.setQuantidade(dto.quantidade());
+        amostra.setEnderecoCaptura(dto.enderecoCaptura());
+        amostra.setDataCaptura(LocalDate.parse(dto.dataCaptura()));
+        amostra.setInsetoLarva(dto.insetoLarva());
+        amostra.setMunicipioId(dto.municipioId());
+        amostra.setMunicipioNome(dto.municipioNome());
+        amostra.setProtocoloLote(dto.protocoloLote());
+        amostra.setStatus("CADASTRADA");
 
-        Amostra amostra = new Amostra(
-                protocolo,
-                createAmostra.tipo(),
-                java.sql.Date.valueOf(createAmostra.dataCadastro()),
-                createAmostra.dataColeta(),
-                createAmostra.localColeta(),
-                createAmostra.municipioNome(),
-                createAmostra.municipioID(),
-                createAmostra.protocoloLote(),
-                createAmostra.Status(),
-                createAmostra.ObsStatus()
-        );
+        verificarPrazos(amostra);
 
-        verificarPrazoEnvio(amostra);
-        tratarAmostraInvalida(amostra);
-
-        return amostraRepository.save(amostra).getIdProtocolo();
+        return amostraRepository.save(amostra).getProtocolo();
     }
 
-    public Optional<Amostra> getIdProtocolo(String idProtocolo) {
-        try {
-            UUID id = UUID.fromString(idProtocolo);
-            return amostraRepository.findById(id);
-        } catch (IllegalArgumentException e) {
-            return Optional.empty();
-        }
+    /**
+     * Busca uma amostra pelo seu protocolo.
+     */
+    public Optional<Amostra> buscarPorProtocolo(String protocolo) {
+        return amostraRepository.findById(protocolo);
     }
 
-    public List<Amostra> listAmostras() {
-        return amostraRepository.findAll();
+    /**
+     * Lista todas as amostras de um município.
+     */
+    public List<Amostra> listarPorMunicipio(UUID municipioId) {
+        return amostraRepository.findByMunicipioId(municipioId);
     }
 
-    @Transactional
-    public void updateAmostraById(String idProtocolo, UpdateAmostraDto updateAmostraDto) {
-        Amostra amostra = amostraRepository.findById(UUID.fromString(idProtocolo))
-                .orElseThrow(() -> new BusinessRuleException("Amostra não encontrada"));
+    public void deletarAmostra(String protocolo) {
+        Amostra amostra = amostraRepository.findByProtocolo(protocolo)
+                .orElseThrow(() -> new BusinessRuleException("Amostra não encontrada com o protocolo: " + protocolo));
 
-        validarLoteNaoDespachado(amostra);
-
-        if (updateAmostraDto.ObsStatus() != null) {
-            amostra.setObsStatus(updateAmostraDto.ObsStatus());
-        }
-        if (updateAmostraDto.dataColeta() != null) {
-            amostra.setDataColeta(updateAmostraDto.dataColeta());
-        }
-        if (updateAmostraDto.localColeta() != null) {
-            amostra.setLocalColeta(updateAmostraDto.localColeta());
-        }
-        if (updateAmostraDto.Status() != null) {
-            if ("INVALIDO".equalsIgnoreCase(updateAmostraDto.Status())) {
-                notificarPrefeitura(amostra);
-            }
-            amostra.setStatus(updateAmostraDto.Status());
-        }
-
-        tratarAmostraInvalida(amostra);
-        amostraRepository.save(amostra);
-    }
-
-    @Transactional
-    public void deleteById(String idProtocolo) {
-        Amostra amostra = amostraRepository.findById(UUID.fromString(idProtocolo))
-                .orElseThrow(() -> new BusinessRuleException("Amostra não encontrada"));
-
-        validarLoteNaoDespachado(amostra);
         amostraRepository.delete(amostra);
     }
 
-    // olhar se tera que mudar
+    /**
+     * Atualiza os campos de status e observação de uma amostra.
+     */
     @Transactional
-    public void excluirLote(String protocoloLote) {
-        if (amostraRepository.countByProtocoloLote(protocoloLote) > 0) {
-            throw new BusinessRuleException("Lote não pode ser excluído: contém amostras vinculadas");
+    public void atualizarStatus(String protocolo, UpdateAmostraDto dto) {
+        Amostra amostra = amostraRepository.findByProtocolo(protocolo)
+                .orElseThrow(() -> new BusinessRuleException("Amostra não encontrada com o protocolo: " + protocolo));
+
+        if (dto.status() != null && !dto.status().isBlank()) {
+            amostra.setStatus(dto.status());
         }
-        // Implementação da exclusão do lote, se necessário
+
+        if (dto.observacao() != null) {
+            amostra.setObservacao(dto.observacao());
+        }
+
+        amostraRepository.save(amostra);
     }
 
-    public List<Amostra> listarAmostrasPorLote(String protocoloLote) {
-        return amostraRepository.findByProtocoloLote(protocoloLote);
+    private String gerarProtocolo() {
+        String data = LocalDate.now().format(DateTimeFormatter.ofPattern("MMyyyy"));
+        long sequencial = amostraRepository.countByDataCriacao(LocalDate.now()) + 1;
+        return data + "-" + String.format("%05d", sequencial);
     }
 
-    // ==================== REGRAS DE NEGÓCIO ====================
-
-    private void validarDadosObrigatorios(CreateAmostraDto dto) {
-        if (dto.tipo() == null) {
-            throw new IllegalArgumentException("Tipo de amostra é obrigatório.");
+    private void validarDados(CreateAmostraDto dto) {
+        if (dto.quantidade() <= 0) {
+            throw new BusinessRuleException("Quantidade deve ser maior que zero");
         }
-        if (dto.dataColeta() == null || dto.dataColeta().isBlank()) {
-            throw new IllegalArgumentException("Data de coleta é obrigatória.");
+        if (LocalDate.parse(dto.dataCaptura()).isAfter(LocalDate.now())) {
+            throw new BusinessRuleException("Data de captura não pode ser futura");
         }
-        if (dto.municipioID() == null) {
-            throw new IllegalArgumentException("ID do município é obrigatório.");
-        }
-        if (dto.protocoloLote() == null || dto.localColeta() == null || dto.dataCadastro() == null) {
-            throw new IllegalArgumentException("Campos obrigatórios estão faltando.");
+        if (dto.protocoloLote() == null || dto.protocoloLote().isBlank()) {
+            throw new BusinessRuleException("Protocolo do lote é obrigatório");
         }
     }
 
-    private void validarTipo(Tipo tipo) {
-        if (tipo == null) {
-            throw new IllegalArgumentException("Tipo de amostra inválido.");
-        }
-    }
-
-    private void validarCompatibilidadeLaminasPCE(String protocoloLote, Tipo tipo) {
-        if (tipo == Tipo.LaminasPCE) {
-            if (amostraRepository.existsByProtocoloLoteAndTipoNot(protocoloLote, Tipo.LaminasPCE)) {
+    private void validarLaminasPCE(String protocoloLote, Tipo tipo) {
+        if (tipo == Tipo.LAMINAS_PCE) {
+            if (amostraRepository.existsByProtocoloLoteAndTipoNot(protocoloLote, Tipo.LAMINAS_PCE)) {
                 throw new BusinessRuleException("Lâminas PCE não podem estar no mesmo lote que outros tipos");
             }
         } else {
-            if (amostraRepository.existsByProtocoloLoteAndTipo(protocoloLote, Tipo.LaminasPCE)) {
+            if (amostraRepository.existsByProtocoloLoteAndTipo(protocoloLote, Tipo.LAMINAS_PCE)) {
                 throw new BusinessRuleException("Não é possível adicionar este tipo ao lote (já contém Lâminas PCE)");
             }
         }
     }
 
-    private void validarLoteNaoDespachado(Amostra amostra) {
-        if ("DESPACHADO".equalsIgnoreCase(amostra.getStatus())) {
-            throw new InvalidOperationException("Operação não permitida: lote já despachado");
-        }
-    }
+    private void verificarPrazos(Amostra amostra) {
+        LocalDate dataAtual = LocalDate.now();
+        long diasDiferenca = ChronoUnit.DAYS.between(amostra.getDataCaptura(), dataAtual);
 
-    private void tratarAmostraInvalida(Amostra amostra) {
-        if ("INVÁLIDA".equalsIgnoreCase(amostra.getStatus()) || "INVALIDO".equalsIgnoreCase(amostra.getStatus())) {
-            System.out.println("⚠ Atenção: Amostra inválida. Notificar o Lacen ou prefeitura.");
-        }
-    }
-
-    private void notificarPrefeitura(Amostra amostra) {
-        String mensagem = String.format(
-                "Notificação: Amostra %s (%s) do município %s foi marcada como INVÁLIDA",
-                amostra.getIdProtocolo(),
-                amostra.getTipo(),
-                amostra.getMunicipioNome()
-        );
-        System.out.println(mensagem); // Substituir por notificação real (e-mail, SMS etc)
-    }
-
-    private void verificarPrazoEnvio(Amostra amostra) {
-        Tipo tipo = amostra.getTipo();
-        LocalDate dataCadastro = new java.sql.Date(amostra.getDataCadastro().getTime()).toLocalDate();
-        long diasDesdeCadastro = ChronoUnit.DAYS.between(dataCadastro, LocalDate.now());
-
-        switch (tipo) {
-            case Mosquito:
-                if (diasDesdeCadastro > 2) amostra.setStatus("PRAZO_EXCEDIDO");
-                break;
-            case Besouro:
-            case Carrapato:
-                if (diasDesdeCadastro > 5) amostra.setStatus("PRAZO_EXCEDIDO");
-                break;
-            case Caramujo:
-                LocalDate dataColeta = LocalDate.parse(amostra.getDataColeta(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                if (!dataColeta.equals(LocalDate.now()) || LocalTime.now().isAfter(LocalTime.of(12, 0))) {
+        switch (amostra.getTipo()) {
+            case MOSQUITO:
+                if (diasDiferenca > 2) {
                     amostra.setStatus("PRAZO_EXCEDIDO");
+                    amostra.setObservacao("Amostra de mosquito excedeu o prazo de 48h para envio");
                 }
                 break;
-            case LaminasPCE:
-            case Escorpiao:
-            case Larvas:
-                // Não exige prazo
+            case BARBEIRO:
+            case BESOURO:
+            case CARRAPATO:
+                if (diasDiferenca > 5) {
+                    amostra.setStatus("PRAZO_EXCEDIDO");
+                    amostra.setObservacao("Amostra excedeu o prazo de 5 dias para envio");
+                }
+                break;
+            case CARAMUJO:
+                if (!amostra.getDataCaptura().equals(dataAtual)) {
+                    amostra.setStatus("PRAZO_EXCEDIDO");
+                    amostra.setObservacao("Caramujos devem ser enviados no mesmo dia da coleta");
+                }
+                break;
+            case LAMINAS_PCE:
+                if (diasDiferenca > 7) {
+                    amostra.setStatus("PRAZO_EXCEDIDO");
+                    amostra.setObservacao("Lâminas PCE devem ser enviadas semanalmente");
+                }
+                break;
+            case ESCORPIAO:
+                if (amostra.getInsetoLarva() != null &&
+                        amostra.getInsetoLarva().toLowerCase().contains("esmagado")) {
+                    amostra.setStatus("INVALIDA");
+                    amostra.setObservacao("Escorpião não pode estar esmagado para análise");
+                }
+                break;
+            case LARVAS:
+                if (diasDiferenca > 3) {
+                    amostra.setStatus("PRAZO_EXCEDIDO");
+                    amostra.setObservacao("Larvas devem ser enviadas em até 72h após coleta");
+                }
                 break;
         }
-    }
-
-    // Utilitário opcional: gerador de protocolo (se necessário usar)
-    private String gerarProtocolo() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMdd");
-        String data = LocalDate.now().format(formatter);
-        int random = new Random().nextInt(9999);
-        return data + "-" + String.format("%04d", random);
     }
 }

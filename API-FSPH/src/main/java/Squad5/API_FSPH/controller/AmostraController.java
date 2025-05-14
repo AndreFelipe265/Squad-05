@@ -1,18 +1,21 @@
 package Squad5.API_FSPH.controller;
 
+import Squad5.API_FSPH.dto.CreateAmostraDto;
+import Squad5.API_FSPH.dto.UpdateAmostraDto;
 import Squad5.API_FSPH.entity.Amostra;
 import Squad5.API_FSPH.service.AmostraService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/v1/Amostra")
-//declarar que é um arquivo de controler, declarar caminho,
+@RequestMapping("/api/amostras")
+@Tag(name = "Amostras", description = "Gerenciamento de amostras")
 public class AmostraController {
-    //declarar metodos (post/get/put/delete) e seus comportamentos
 
     private final AmostraService amostraService;
 
@@ -20,39 +23,58 @@ public class AmostraController {
         this.amostraService = amostraService;
     }
 
+    /**
+     * Endpoint para criação de uma nova amostra.
+     */
     @PostMapping
-    ResponseEntity<Amostra> createAmostra(@RequestBody CreateAmostraDto createAmostraDto){
-        var amostraId = amostraService.createAmostra(createAmostraDto);
-        return ResponseEntity.created(URI.create("v1/Amostra/" + amostraId.toString())).build();
+    @Operation(summary = "Cria uma nova amostra")
+    public ResponseEntity<String> criarAmostra(@RequestBody CreateAmostraDto dto) {
+        String protocolo = amostraService.criarAmostra(dto);
+        return ResponseEntity.ok().body(protocolo); // Retorna o protocolo da amostra criada
     }
 
-    @GetMapping("/{idProtocolo}")
-    ResponseEntity<Amostra> getAmostraByID(@PathVariable("idProtocolo") String idProtocolo){
-        var amostra = amostraService.getIdProtocolo(idProtocolo);
-        if (amostra.isPresent()){
-            return ResponseEntity.ok(amostra.get());
-        }else {
-            return ResponseEntity.notFound().build();
-        }
+    /**
+     * Endpoint para buscar uma amostra pelo protocolo.
+     */
+    @GetMapping("/{protocolo}")
+    @Operation(summary = "Busca amostra por protocolo")
+    public ResponseEntity<Amostra> buscarPorProtocolo(@PathVariable String protocolo) {
+        return amostraService.buscarPorProtocolo(protocolo)
+                .map(amostra -> ResponseEntity.ok().body(amostra)) // Evita ambiguidade do método .ok()
+                .orElse(ResponseEntity.notFound().build()); // Retorna 404 se não encontrar
     }
 
-    @GetMapping
-    public ResponseEntity<List<Amostra>> listAmostras() {
-        var amostras = amostraService.listAmostras();
-        return ResponseEntity.ok(amostras);
+    /**
+     * Endpoint para deletar uma amostra pelo protocolo.
+     */
+    @DeleteMapping("/{protocolo}")
+    @Operation(summary = "Deleta uma amostra por protocolo")
+    public ResponseEntity<Void> deletarAmostra(@PathVariable String protocolo) {
+        amostraService.deletarAmostra(protocolo);
+        return ResponseEntity.noContent().build(); // 204 No Content se deletado com sucesso
     }
 
-    @PutMapping("/{idProtocolo}")
-    public ResponseEntity<Void> updateAmostraById(@PathVariable("idProtocolo")String idProtocolo,
-                                                  @RequestBody UpdateAmostraDto updateAmostraDto) {
-        amostraService.updateAmostraById(idProtocolo, updateAmostraDto);
-        return ResponseEntity.noContent().build();
+    /**
+     * Endpoint para listar amostras por município.
+     */
+    @GetMapping("/municipio/{municipioId}")
+    @Operation(summary = "Lista amostras por município")
+    public ResponseEntity<List<Amostra>> listarPorMunicipio(@PathVariable UUID municipioId) {
+        List<Amostra> amostras = amostraService.listarPorMunicipio(municipioId);
+        return amostras.isEmpty() ?
+                ResponseEntity.noContent().build() : // 204 se lista estiver vazia
+                ResponseEntity.ok().body(amostras);  // Retorna lista com 200
     }
 
-    @DeleteMapping("/{idProtocolo}")
-    public ResponseEntity<Void> deleteById(@PathVariable("idProtocolo") String idProtocolo) {
-        amostraService.deleteById(idProtocolo);
-        return ResponseEntity.noContent().build();
+    /**
+     * Endpoint para atualizar status e/ou observação de uma amostra.
+     */
+    @PatchMapping("/{protocolo}")
+    @Operation(summary = "Atualiza status da amostra")
+    public ResponseEntity<Void> atualizarStatus(
+            @PathVariable String protocolo,
+            @RequestBody UpdateAmostraDto dto) {
+        amostraService.atualizarStatus(protocolo, dto);
+        return ResponseEntity.noContent().build(); // 204 No Content ao atualizar com sucesso
     }
-
 }

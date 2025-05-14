@@ -1,143 +1,51 @@
 package Squad5.API_FSPH.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.UUID;
 
-//declarar que é um arquivo de entidade, declarar tabela, declarar os construtores com e sem argumentos
 @Entity
 @Table(name = "tb_amostras")
+@Getter @Setter
 public class Amostra {
-    // criar colunas de acordo com os requisitos:
-    // idProtocolo / tipo / dataCadastro / dataColeta / localColeta / municipioNome / minicipioID / protocoloLote / Status / ObsStatus
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID) //alterar dps pro protocolo
-    private UUID idProtocolo;
+    private String protocolo; // Identificador único da amostra (gerado automaticamente)
 
-    @Column(name = "tipo")
-    private Tipo tipo;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Tipo tipo; // Enum que define o tipo da amostra
 
-    @Column(name = "dataCadastro") //usar o tipo de Instant?
-    private Date dataCadastro;
+    @Column(nullable = false)
+    private Integer quantidade; // Quantidade coletada
 
-    @Column(name = "dataColeta")
-    private String dataColeta;
+    @Column(name = "endereco_captura", nullable = false)
+    private String enderecoCaptura; // Local onde foi capturada
 
-    @Column(name = "localColeta")
-    private String localColeta;
+    @Column(name = "data_captura", nullable = false)
+    private LocalDate dataCaptura; // Data da captura
 
-    @Column(name = "municipioNome")
-    private String municipioNome;
+    @Column(name = "inseto_larva")
+    private String insetoLarva; // Informações adicionais (ex: tipo de larva)
 
-    @Column(name = "municipioId")
+    @Column(name = "municipio_id", nullable = false)
     private UUID municipioId;
 
-    @Column(name = "protocoloLote")
+    @Column(name = "municipio_nome", nullable = false)
+    private String municipioNome;
+
+    @Column(name = "protocolo_lote", nullable = false)
     private String protocoloLote;
 
     @Column(name = "status")
-    private String Status;
+    private String status; // Status atual da amostra (ex: CADASTRADA, PRAZO_EXCEDIDO)
 
-    @Column(name = "obsStatus")
-    private String obsStatus;
+    @Column(name = "observacao")
+    private String observacao; // Observações adicionais sobre a amostra
 
-    public Amostra() {
-    }
-
-    public Amostra(UUID idProtocolo, Tipo tipo, Date dataCadastro, String dataColeta, String localColeta, String municipioNome, UUID municipioId, String protocoloLote, String status, String obsStatus) {
-        this.idProtocolo = idProtocolo;
-        this.tipo = tipo;
-        this.dataCadastro = dataCadastro;
-        this.dataColeta = dataColeta;
-        this.localColeta = localColeta;
-        this.municipioNome = municipioNome;
-        this.municipioId = municipioId;
-        this.protocoloLote = protocoloLote;
-        Status = status;
-        this.obsStatus = obsStatus;
-    }
-
-    public UUID getIdProtocolo() {
-        return idProtocolo;
-    }
-
-    public void setIdProtocolo(UUID idProtocolo) {
-        this.idProtocolo = idProtocolo;
-    }
-
-    public Tipo getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(Tipo tipo) {
-        this.tipo = tipo;
-    }
-
-    public Date getDataCadastro() {
-        return dataCadastro;
-    }
-
-    public void setDataCadastro(Date dataCadastro) {
-        this.dataCadastro = dataCadastro;
-    }
-
-    public String getDataColeta() {
-        return dataColeta;
-    }
-
-    public void setDataColeta(String dataColeta) {
-        this.dataColeta = dataColeta;
-    }
-
-    public String getLocalColeta() {
-        return localColeta;
-    }
-
-    public void setLocalColeta(String localColeta) {
-        this.localColeta = localColeta;
-    }
-
-    public String getMunicipioNome() {
-        return municipioNome;
-    }
-
-    public void setMunicipioNome(String municipioNome) {
-        this.municipioNome = municipioNome;
-    }
-
-    public UUID getMunicipioId() {
-        return municipioId;
-    }
-
-    public void setMunicipioId(UUID municipioId) {
-        this.municipioId = municipioId;
-    }
-
-    public String getProtocoloLote() {
-        return protocoloLote;
-    }
-
-    public void setProtocoloLote(String protocoloLote) {
-        this.protocoloLote = protocoloLote;
-    }
-
-    public String getStatus() {
-        return Status;
-    }
-
-    public void setStatus(String status) {
-        Status = status;
-    }
-
-    public String getObsStatus() {
-        return obsStatus;
-    }
-
-    public void setObsStatus(String obsStatus) {
-        this.obsStatus = obsStatus;
-    }
-
+    @Column(name = "data_criacao", nullable = false)
+    private LocalDate dataCriacao = LocalDate.now(); // Data de criação da amostra
 }

@@ -1,6 +1,6 @@
 package Squad5.API_FSPH.service;
 
-
+// Enum com regras de envio por tipo
 public enum TipoAmostra {
     MOSQUITO("48h"),
     BARBEIRO("5 dias"),
@@ -29,4 +29,3 @@ public enum TipoAmostra {
         }
     }
 }
-
