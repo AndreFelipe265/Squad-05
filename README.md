@@ -1,6 +1,6 @@
 # Squad-05
-
-### link pra Amostra metodo POST: http://localhost:8080/api/amostras
+Colocar o arquivo ApiFsphApplication para rodar no intellij
+#### link pra Amostra metodo POST: http://localhost:8080/api/amostras
 json:  
 {  
   "tipo": "MOSQUITO",  
@@ -12,12 +12,12 @@ json:
   "municipioNome": "Juazeiro",  
   "protocoloLote": "PROTO-JZN-000789"  
 }
-### link pra Amostra metodo GET: http://localhost:8080/api/amostras/{protocolo(ex: 052025-00001)}
+#### link pra Amostra metodo GET: http://localhost:8080/api/amostras/{protocolo(ex: 052025-00001)}
 
-### link pra Amostra metodo DELETE: http://localhost:8080/api/amostras/{protocolo(ex: 052025-00001)}
+#### link pra Amostra metodo DELETE: http://localhost:8080/api/amostras/{protocolo(ex: 052025-00001)}
 apaga a amostra do sistema
 
-### link pra Amostra metodo PATCH: http://localhost:8080/api/amostras/{protocolo(ex: 052025-00001)}
+#### link pra Amostra metodo PATCH: http://localhost:8080/api/amostras/{protocolo(ex: 052025-00001)}
 json:  
 {  
   "status": "Concluída",  
