@@ -79,6 +79,10 @@ public class AmostraService {
         Amostra amostra = amostraRepository.findByProtocolo(protocolo)
                 .orElseThrow(() -> new BusinessRuleException("Amostra não encontrada com o protocolo: " + protocolo));
 
+        if ("CONCLUIDA".equalsIgnoreCase(amostra.getStatus())) {
+            throw new BusinessRuleException("Não é possível editar uma amostra com status CONCLUIDA.");
+        }
+
         if (dto.status() != null && !dto.status().isBlank()) {
             amostra.setStatus(dto.status());
         }

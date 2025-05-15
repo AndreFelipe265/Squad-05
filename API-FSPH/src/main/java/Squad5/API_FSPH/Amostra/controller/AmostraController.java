@@ -2,6 +2,7 @@ package Squad5.API_FSPH.Amostra.controller;
 
 import Squad5.API_FSPH.Amostra.entity.Amostra;
 import Squad5.API_FSPH.Amostra.service.AmostraService;
+import Squad5.API_FSPH.exception.BusinessRuleException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -71,12 +72,17 @@ public class AmostraController {
     public ResponseEntity<?> atualizarStatus(
             @PathVariable String protocolo,
             @RequestBody UpdateAmostraDto dto) {
-        boolean atualizado = amostraService.atualizarStatus(protocolo, dto);
-        if (atualizado) {
-            return ResponseEntity.ok(Map.of("message", "Status atualizado com sucesso"));
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", "Amostra não encontrada: " + protocolo));
+        try {
+            boolean atualizado = amostraService.atualizarStatus(protocolo, dto);
+            if (atualizado) {
+                return ResponseEntity.ok(Map.of("message", "Status atualizado com sucesso"));
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "Amostra não encontrada: " + protocolo));
+            }
+        } catch (BusinessRuleException e) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", e.getMessage()));
         }
     }
 }
