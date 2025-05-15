@@ -25,9 +25,8 @@ public class AmostraService {
         this.amostraRepository = amostraRepository;
     }
 
-    /**
-     * Cria uma nova amostra com base nos dados do DTO.
-     */
+    // Cria uma nova amostra com base nos dados do DTO.
+
     @Transactional
     public String criarAmostra(CreateAmostraDto dto) {
         validarDados(dto);
@@ -50,16 +49,13 @@ public class AmostraService {
         return amostraRepository.save(amostra).getProtocolo();
     }
 
-    /**
-     * Busca uma amostra pelo seu protocolo.
-     */
+    // Busca uma amostra pelo seu protocolo.
+
     public Optional<Amostra> buscarPorProtocolo(String protocolo) {
         return amostraRepository.findById(protocolo);
     }
 
-    /**
-     * Lista todas as amostras de um município.
-     */
+    // Lista todas as amostras de um município.
     public List<Amostra> listarPorMunicipio(UUID municipioId) {
         return amostraRepository.findByMunicipioId(municipioId);
     }
@@ -71,9 +67,8 @@ public class AmostraService {
         amostraRepository.delete(amostra);
     }
 
-    /**
-     * Atualiza os campos de status e observação de uma amostra.
-     */
+    //Atualiza os campos de status e observação de uma amostra.
+
     @Transactional
     public void atualizarStatus(String protocolo, UpdateAmostraDto dto) {
         Amostra amostra = amostraRepository.findByProtocolo(protocolo)
@@ -91,7 +86,7 @@ public class AmostraService {
     }
 
     private String gerarProtocolo() {
-        String data = LocalDate.now().format(DateTimeFormatter.ofPattern("MMyyyy"));
+        String data = LocalDate.now().format(DateTimeFormatter.ofPattern("ddyyyy"));
         long sequencial = amostraRepository.countByDataCriacao(LocalDate.now()) + 1;
         return data + "-" + String.format("%05d", sequencial);
     }

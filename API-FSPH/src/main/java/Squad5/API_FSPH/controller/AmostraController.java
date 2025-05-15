@@ -23,9 +23,7 @@ public class AmostraController {
         this.amostraService = amostraService;
     }
 
-    /**
-     * Endpoint para criação de uma nova amostra.
-     */
+    // Endpoint para criação de uma nova amostra.
     @PostMapping
     @Operation(summary = "Cria uma nova amostra")
     public ResponseEntity<String> criarAmostra(@RequestBody CreateAmostraDto dto) {
@@ -33,9 +31,7 @@ public class AmostraController {
         return ResponseEntity.ok().body(protocolo); // Retorna o protocolo da amostra criada
     }
 
-    /**
-     * Endpoint para buscar uma amostra pelo protocolo.
-     */
+    // Endpoint para buscar uma amostra pelo protocolo.
     @GetMapping("/{protocolo}")
     @Operation(summary = "Busca amostra por protocolo")
     public ResponseEntity<Amostra> buscarPorProtocolo(@PathVariable String protocolo) {
@@ -44,9 +40,7 @@ public class AmostraController {
                 .orElse(ResponseEntity.notFound().build()); // Retorna 404 se não encontrar
     }
 
-    /**
-     * Endpoint para deletar uma amostra pelo protocolo.
-     */
+    // Endpoint para deletar uma amostra pelo protocolo.
     @DeleteMapping("/{protocolo}")
     @Operation(summary = "Deleta uma amostra por protocolo")
     public ResponseEntity<Void> deletarAmostra(@PathVariable String protocolo) {
@@ -54,9 +48,8 @@ public class AmostraController {
         return ResponseEntity.noContent().build(); // 204 No Content se deletado com sucesso
     }
 
-    /**
-     * Endpoint para listar amostras por município.
-     */
+    // Endpoint para listar amostras por município.
+
     @GetMapping("/municipio/{municipioId}")
     @Operation(summary = "Lista amostras por município")
     public ResponseEntity<List<Amostra>> listarPorMunicipio(@PathVariable UUID municipioId) {
@@ -66,9 +59,7 @@ public class AmostraController {
                 ResponseEntity.ok().body(amostras);  // Retorna lista com 200
     }
 
-    /**
-     * Endpoint para atualizar status e/ou observação de uma amostra.
-     */
+    // Endpoint para atualizar status e/ou observação de uma amostra.
     @PatchMapping("/{protocolo}")
     @Operation(summary = "Atualiza status da amostra")
     public ResponseEntity<Void> atualizarStatus(
