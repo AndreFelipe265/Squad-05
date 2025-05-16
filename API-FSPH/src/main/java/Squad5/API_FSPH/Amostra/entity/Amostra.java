@@ -28,9 +28,6 @@ public class Amostra {
     @Column(name = "data_captura", nullable = false)
     private LocalDate dataCaptura; // Data da captura
 
-    @Column(name = "inseto_larva")
-    private String insetoLarva; // Informações adicionais (ex: tipo de larva) (ex: caso de escorpiao "esmagado")
-
     @Column(name = "municipio_id", nullable = false)
     private UUID municipioId;
 

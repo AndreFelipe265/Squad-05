@@ -40,7 +40,6 @@ public class AmostraService {
         amostra.setLocalCaptura(dto.localCaptura());
         amostra.setEnderecoCaptura(dto.enderecoCaptura());
         amostra.setDataCaptura(LocalDate.parse(dto.dataCaptura()));
-        amostra.setInsetoLarva(dto.insetoLarva());
         amostra.setMunicipioId(dto.municipioId());
         amostra.setMunicipioNome(dto.municipioNome());
         amostra.setProtocoloLote(dto.protocoloLote());
@@ -140,13 +139,6 @@ public class AmostraService {
                 }
                 break;
 
-            case ESCORPIAO:
-                if (amostra.getInsetoLarva() != null &&
-                        amostra.getInsetoLarva().toLowerCase().contains("esmagado")) {
-                    throw new BusinessRuleException("Escorpião não pode estar esmagado para análise");
-                }
-                break;
-
             case CARAMUJO:
                 if (!amostra.getDataCaptura().equals(dataAtual)) {
                     throw new BusinessRuleException("Caramujo deve ser enviado no mesmo dia da coleta");
@@ -162,6 +154,10 @@ public class AmostraService {
                 if (diasDiferenca > 7) {
                     throw new BusinessRuleException("Lâminas PCE devem ser enviadas semanalmente (até 7 dias)");
                 }
+                break;
+
+            case ESCORPIAO:
+                // Nenhuma regra específica após remoção do campo insetoLarva
                 break;
 
             case CARRAPATO:
