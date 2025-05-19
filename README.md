@@ -1,5 +1,5 @@
 # Squad-05
-Abrir o arquivo API-FSPH no intellij  
+Abrir o arquivo API-FSPH como projeto no intellij  
 Colocar o arquivo ApiFsphApplication.java para rodar no intellij
 #### link pra Amostra metodo POST: http://localhost:8080/api/amostras
 json:  
