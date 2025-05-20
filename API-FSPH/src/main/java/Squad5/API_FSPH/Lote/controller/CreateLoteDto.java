@@ -17,8 +17,6 @@ public record CreateLoteDto(
         @JsonFormat(pattern = "yyyy-MM-dd")
         Date dataRecebimento,                                   // Data de recebimento
         /** retirar isso e add como um Patch para atualizar quando receber? */
-        @NotNull
-        @Size(min = 1)
         List<@NotNull @Pattern(regexp = "\\d{2}\\d{4}-\\d{5}", message = "Formato inválido, deve ser DDYYYY-XXXXX") String> amostrasId // Lista de protocolos das amostras associadas
 
 ) {}
