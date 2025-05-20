@@ -34,29 +34,29 @@ public class AmostraController {
     }
 
     // Endpoint para buscar uma amostra pelo protocolo.
-    @GetMapping("/{protocolo}")
+    @GetMapping("/{protocoloAmostra}")
     @Operation(summary = "Busca amostra por protocolo")
-    public ResponseEntity<Amostra> buscarPorProtocolo(@PathVariable String protocolo) {
-        return amostraService.buscarPorProtocolo(protocolo)
+    public ResponseEntity<Amostra> buscarPorProtocolo(@PathVariable String protocoloAmostra) {
+        return amostraService.buscarPorProtocolo(protocoloAmostra)
                 .map(amostra -> ResponseEntity.ok().body(amostra)) // Evita ambiguidade do métod .ok()
                 .orElse(ResponseEntity.notFound().build()); // Retorna 404 se não encontrar
     }
 
     // Endpoint para deletar uma amostra pelo protocolo.
-    @DeleteMapping("/{protocolo}")
+    @DeleteMapping("/{protocoloAmostra}")
     @Operation(summary = "Deleta uma amostra por protocolo")
-    public ResponseEntity<?> deletarAmostra(@PathVariable String protocolo) {
-        boolean deletado = amostraService.deletarAmostra(protocolo);
+    public ResponseEntity<?> deletarAmostra(@PathVariable String protocoloAmostra) {
+        boolean deletado = amostraService.deletarAmostra(protocoloAmostra);
         if (deletado) {
             return ResponseEntity.ok(Map.of("message", "Amostra deletada com sucesso"));
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", "Amostra não encontrada: " + protocolo));
+                    .body(Map.of("error", "Amostra não encontrada: " + protocoloAmostra));
         }
     }
 
     // Endpoint para listar amostras por município.
-
+    /** alterar para mostrar todas as amostras cadastradas atualmente no sistema */
     @GetMapping("/municipio/{municipioId}")
     @Operation(summary = "Lista amostras por município")
     public ResponseEntity<List<Amostra>> listarPorMunicipio(@PathVariable UUID municipioId) {
@@ -67,18 +67,18 @@ public class AmostraController {
     }
 
     // Endpoint para atualizar status e/ou observação de uma amostra.
-    @PatchMapping("/{protocolo}")
+    @PatchMapping("/{protocoloAmostra}")
     @Operation(summary = "Atualiza status da amostra")
     public ResponseEntity<?> atualizarStatus(
-            @PathVariable String protocolo,
+            @PathVariable String protocoloAmostra,
             @RequestBody UpdateAmostraDto dto) {
         try {
-            boolean atualizado = amostraService.atualizarStatus(protocolo, dto);
+            boolean atualizado = amostraService.atualizarStatus(protocoloAmostra, dto);
             if (atualizado) {
                 return ResponseEntity.ok(Map.of("message", "Status atualizado com sucesso"));
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(Map.of("error", "Amostra não encontrada: " + protocolo));
+                        .body(Map.of("error", "Amostra não encontrada: " + protocoloAmostra));
             }
         } catch (BusinessRuleException e) {
             return ResponseEntity.badRequest()

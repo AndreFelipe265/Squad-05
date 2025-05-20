@@ -13,7 +13,7 @@ import java.util.UUID;
 @Repository
 public interface AmostraRepository extends JpaRepository<Amostra, String> {
 
-    Optional<Amostra> findByProtocolo(String protocolo);
+    Optional<Amostra> findByProtocoloAmostra(String protocoloAmostra);
 
     // Verifica se já existe amostra do mesmo tipo no lote
     boolean existsByProtocoloLoteAndTipo(String protocoloLote, Tipo tipo);

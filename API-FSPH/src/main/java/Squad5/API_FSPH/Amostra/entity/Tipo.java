@@ -4,7 +4,6 @@ package Squad5.API_FSPH.Amostra.entity;
 public enum Tipo {
     MOSQUITO,
     BARBEIRO,
-    BESOURO,
     CARAMUJO,
     CARRAPATO,
     ESCORPIAO,

@@ -12,8 +12,7 @@ public record CreateAmostraDto(
         @NotBlank String localCaptura,        // Local de captura (ex: área urbana, rural, matagal)
         @NotBlank String enderecoCaptura,     // Endereço da coleta da amostra
         @NotBlank String dataCaptura,         // Data da coleta no formato ISO (yyyy-MM-dd)
-        String insetoLarva,                   // Nome do inseto ou larva, se aplicável
         @NotNull UUID municipioId,            // ID do município
         @NotBlank String municipioNome,       // Nome do município
-        @NotBlank String protocoloLote        // Protocolo do lote a que pertence
+        @NotBlank String protocoloLote        /** retirar daq pq sera adicionado automaticamente */
 ) {}

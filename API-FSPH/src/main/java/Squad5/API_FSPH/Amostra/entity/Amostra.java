@@ -13,7 +13,7 @@ import java.util.UUID;
 public class Amostra {
 
     @Id
-    private String protocolo; // Identificador único da amostra (gerado automaticamente)
+    private String protocoloAmostra; // Identificador único da amostra (gerado automaticamente)
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -34,8 +34,9 @@ public class Amostra {
     @Column(name = "municipio_nome", nullable = false)
     private String municipioNome;
 
-    @Column(name = "protocolo_lote", nullable = false)
+    @Column(name = "protocolo_lote")
     private String protocoloLote;
+    /** fazer add o protocolo do lote quando a amostra for cadastrada em um */
 
     @Column(name = "status")
     private String status; // Status atual da amostra (ex: CADASTRADA, PRAZO_EXCEDIDO)
@@ -45,4 +46,23 @@ public class Amostra {
 
     @Column(name = "data_criacao", nullable = false)
     private LocalDate dataCriacao = LocalDate.now(); // Data de criação da amostra
+
+
+    public Amostra() {
+    }
+
+    public Amostra(String protocoloAmostra, Tipo tipo, String localCaptura, String enderecoCaptura, LocalDate dataCaptura, UUID municipioId, String municipioNome, String protocoloLote, String status, String observacao, LocalDate dataCriacao) {
+        this.protocoloAmostra = protocoloAmostra;
+        this.tipo = tipo;
+        this.localCaptura = localCaptura;
+        this.enderecoCaptura = enderecoCaptura;
+        this.dataCaptura = dataCaptura;
+        this.municipioId = municipioId;
+        this.municipioNome = municipioNome;
+        this.protocoloLote = protocoloLote;
+        this.status = status;
+        this.observacao = observacao;
+        this.dataCriacao = dataCriacao;
+    }
+
 }

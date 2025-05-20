@@ -35,7 +35,7 @@ public class AmostraService {
         validarLaminasPCE(dto.protocoloLote(), dto.tipo());
 
         Amostra amostra = new Amostra();
-        amostra.setProtocolo(gerarProtocolo());
+        amostra.setProtocoloAmostra(gerarProtocolo());
         amostra.setTipo(dto.tipo());
         amostra.setLocalCaptura(dto.localCaptura());
         amostra.setEnderecoCaptura(dto.enderecoCaptura());
@@ -52,8 +52,8 @@ public class AmostraService {
 
     // Busca uma amostra pelo seu protocolo.
 
-    public Optional<Amostra> buscarPorProtocolo(String protocolo) {
-        return amostraRepository.findById(protocolo);
+    public Optional<Amostra> buscarPorProtocolo(String protocoloAmostra) {
+        return amostraRepository.findById(protocoloAmostra);
     }
 
     // Lista todas as amostras de um município.
@@ -61,22 +61,22 @@ public class AmostraService {
         return amostraRepository.findByMunicipioId(municipioId);
     }
 
-    public boolean deletarAmostra(String protocolo) {
-        if (!amostraRepository.existsById(protocolo)) return false;
+    public boolean deletarAmostra(String protocoloAmostra) {
+        if (!amostraRepository.existsById(protocoloAmostra)) return false;
 
-        amostraRepository.deleteById(protocolo);
+        amostraRepository.deleteById(protocoloAmostra);
         return true;
     }
 
     //Atualiza os campos de status e observação de uma amostra.
 
     @Transactional
-    public boolean atualizarStatus(String protocolo, UpdateAmostraDto dto) {
-        Optional<Amostra> optional = amostraRepository.findById(protocolo);
+    public boolean atualizarStatus(String protocoloAmostra, UpdateAmostraDto dto) {
+        Optional<Amostra> optional = amostraRepository.findById(protocoloAmostra);
         if (optional.isEmpty()) return false;
 
-        Amostra amostra = amostraRepository.findByProtocolo(protocolo)
-                .orElseThrow(() -> new BusinessRuleException("Amostra não encontrada com o protocolo: " + protocolo));
+        Amostra amostra = amostraRepository.findByProtocoloAmostra(protocoloAmostra)
+                .orElseThrow(() -> new BusinessRuleException("Amostra não encontrada com o protocolo: " + protocoloAmostra));
 
         if ("CONCLUIDA".equalsIgnoreCase(amostra.getStatus())) {
             throw new BusinessRuleException("Não é possível editar uma amostra com status CONCLUIDA.");
@@ -109,6 +109,7 @@ public class AmostraService {
         }
     }
 
+    /** mudar essa validação para o Lote */
     private void validarLaminasPCE(String protocoloLote, Tipo tipo) {
         if (tipo == Tipo.LAMINAS_PCE) {
             if (amostraRepository.existsByProtocoloLoteAndTipoNot(protocoloLote, Tipo.LAMINAS_PCE)) {
