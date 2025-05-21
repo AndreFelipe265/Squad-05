@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -50,10 +51,30 @@ public class AmostraService {
         return amostraRepository.save(amostra);
     }
 
+    @Transactional
+    public List<Amostra> criarAmostras(List<CreateAmostraDto> dtos) {
+        if (dtos == null || dtos.isEmpty()) {
+            throw new IllegalArgumentException("Lista de amostras vazia ou nula");
+        }
+
+        List<Amostra> amostrasCriadas = new ArrayList<>();
+
+        for (CreateAmostraDto dto : dtos) {
+            Amostra amostraCriada = criarAmostra(dto);
+            amostrasCriadas.add(amostraCriada);
+        }
+
+        return amostrasCriadas;
+    }
+
     // Busca uma amostra pelo seu protocolo.
 
-    public Optional<Amostra> buscarPorProtocolo(String protocoloAmostra) {
+    public Optional<?> buscarPorProtocolo(String protocoloAmostra) {
         return amostraRepository.findById(protocoloAmostra);
+    }
+
+    public List<Amostra> listarTodas() {
+        return amostraRepository.findAll();
     }
 
     // Lista todas as amostras de um município.

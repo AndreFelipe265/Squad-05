@@ -25,7 +25,7 @@ public class AmostraController {
         this.amostraService = amostraService;
     }
 
-    // Endpoint para criação de uma nova amostra.
+    // Endpoint para criação de amostra.
     @PostMapping
     @Operation(summary = "Cria uma nova amostra")
     public ResponseEntity<Amostra> criar(@RequestBody @Valid CreateAmostraDto dto) {
@@ -33,13 +33,33 @@ public class AmostraController {
         return ResponseEntity.status(HttpStatus.CREATED).body(amostra);
     }
 
+    @PostMapping("/varias")
+    @Operation(summary = "Cria várias amostras de uma vez")
+    public ResponseEntity<List<Amostra>> criarAmostras(@RequestBody List<CreateAmostraDto> dtos) {
+        List<Amostra> salvas = amostraService.criarAmostras(dtos);
+        return ResponseEntity.status(HttpStatus.CREATED).body(salvas);
+    }
+
     // Endpoint para buscar uma amostra pelo protocolo.
     @GetMapping("/{protocoloAmostra}")
     @Operation(summary = "Busca amostra por protocolo")
-    public ResponseEntity<Amostra> buscarPorProtocolo(@PathVariable String protocoloAmostra) {
+    public ResponseEntity<?> buscarPorProtocolo(@PathVariable String protocoloAmostra) {
         return amostraService.buscarPorProtocolo(protocoloAmostra)
-                .map(amostra -> ResponseEntity.ok().body(amostra)) // Evita ambiguidade do métod .ok()
-                .orElse(ResponseEntity.notFound().build()); // Retorna 404 se não encontrar
+                .map(amostra -> ResponseEntity.ok(amostra))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "Amostra não encontrada: " + protocoloAmostra)));
+    }
+
+    // Endpoint para listar todas as amostras cadastradas no sistema
+    @GetMapping("/todas")
+    @Operation(summary = "Lista todas as amostras cadastradas")
+    public ResponseEntity<?> listarTodas() {
+        List<Amostra> amostras = amostraService.listarTodas();
+        if (amostras.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Nenhuma amostra cadastrada no sistema."));
+        }
+        return ResponseEntity.ok(amostras);
     }
 
     // Endpoint para deletar uma amostra pelo protocolo.
@@ -53,17 +73,6 @@ public class AmostraController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Map.of("error", "Amostra não encontrada: " + protocoloAmostra));
         }
-    }
-
-    // Endpoint para listar amostras por município.
-    /** alterar para mostrar todas as amostras cadastradas atualmente no sistema */
-    @GetMapping("/municipio/{municipioId}")
-    @Operation(summary = "Lista amostras por município")
-    public ResponseEntity<List<Amostra>> listarPorMunicipio(@PathVariable UUID municipioId) {
-        List<Amostra> amostras = amostraService.listarPorMunicipio(municipioId);
-        return amostras.isEmpty() ?
-                ResponseEntity.noContent().build() : // 204 se lista estiver vazia
-                ResponseEntity.ok().body(amostras);  // Retorna lista com 200
     }
 
     // Endpoint para atualizar status e/ou observação de uma amostra.
