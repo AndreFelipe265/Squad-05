@@ -21,7 +21,6 @@ json:
 #### link pra todas as Amostras metodo GET: http://localhost:8080/api/amostras/todas
 
 #### link pra Amostra metodo DELETE: http://localhost:8080/api/amostras/{protocoloAmostra}
-apaga a amostra do sistema
 
 #### link pra Amostra metodo PATCH: http://localhost:8080/api/amostras/{protocoloAmostra}
 json:  
