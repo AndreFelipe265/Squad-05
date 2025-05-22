@@ -32,7 +32,7 @@ public class AmostraController {
         List<Amostra> salvas = amostraService.criarAmostras(dtos);
         return ResponseEntity.status(HttpStatus.CREATED).body(salvas);
     }
-
+    //Gabriel Almeida esteve aqui
     // Endpoint para buscar uma amostra pelo protocolo.
     @GetMapping("/{protocoloAmostra}")
     @Operation(summary = "Busca amostra por protocolo")
