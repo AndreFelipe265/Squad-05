@@ -25,16 +25,9 @@ public class AmostraController {
         this.amostraService = amostraService;
     }
 
-    // Endpoint para criação de amostra.
+    // Endpoint para criação de amostras.
     @PostMapping
-    @Operation(summary = "Cria uma nova amostra")
-    public ResponseEntity<Amostra> criar(@RequestBody @Valid CreateAmostraDto dto) {
-        Amostra amostra = amostraService.criarAmostra(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(amostra);
-    }
-
-    @PostMapping("/varias")
-    @Operation(summary = "Cria várias amostras de uma vez")
+    @Operation(summary = "Criar amostras de uma vez")
     public ResponseEntity<List<Amostra>> criarAmostras(@RequestBody List<CreateAmostraDto> dtos) {
         List<Amostra> salvas = amostraService.criarAmostras(dtos);
         return ResponseEntity.status(HttpStatus.CREATED).body(salvas);

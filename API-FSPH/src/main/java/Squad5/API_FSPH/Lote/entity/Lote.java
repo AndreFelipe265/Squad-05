@@ -26,10 +26,10 @@ public class Lote {
     private String status; // Status do lote como um total
 
     @Column(name = "data_envio")
-    private Date dataEnvio;
+    private LocalDate dataEnvio;
 
     @Column(name = "data_recebimento_lote")
-    private Date dataRecebimento;
+    private LocalDate dataRecebimento;
 
     @Column(name = "data_criacao")
     private LocalDate dataCriacao = LocalDate.now(); // Data de criação do Lote
@@ -45,7 +45,7 @@ public class Lote {
     public Lote() {
     }
 
-    public Lote(String protocoloLote, boolean loteLamina, String status, Date dataEnvio, Date dataRecebimento, LocalDate dataCriacao, List<Amostra> amostras) {
+    public Lote(String protocoloLote, boolean loteLamina, String status, LocalDate dataEnvio, LocalDate dataRecebimento, LocalDate dataCriacao, List<Amostra> amostras) {
         this.protocoloLote = protocoloLote;
         this.loteLamina = loteLamina;
         this.status = status;
@@ -54,5 +54,6 @@ public class Lote {
         this.dataCriacao = dataCriacao;
         this.amostras = amostras;
     }
+
 
 }

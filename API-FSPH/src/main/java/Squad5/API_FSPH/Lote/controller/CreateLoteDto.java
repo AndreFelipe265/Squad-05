@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -13,10 +14,7 @@ import java.util.List;
 public record CreateLoteDto(
         @NotNull boolean loteLamina,                            // Indica se o lote é de lâminas
         @JsonFormat(pattern = "yyyy-MM-dd")
-        Date dataEnvio,                                         // Data de envio
-        @JsonFormat(pattern = "yyyy-MM-dd")
-        Date dataRecebimento,                                   // Data de recebimento
-        /** retirar isso e add como um Patch para atualizar quando receber? */
-        List<@NotNull @Pattern(regexp = "\\d{2}\\d{4}-\\d{5}", message = "Formato inválido, deve ser DDYYYY-XXXXX") String> amostrasId // Lista de protocolos das amostras associadas
+        LocalDate dataEnvio,                                         // Data de envio
+        List<@NotNull @Pattern(regexp = "\\d{2}\\d{4}-\\d{5}", message = "Formato inválido, deve ser DDYYYY-XXXXX") String> amostrasId// Lista de protocolos das amostras associadas
 
 ) {}

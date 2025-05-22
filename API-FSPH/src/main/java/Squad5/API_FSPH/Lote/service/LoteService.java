@@ -3,13 +3,16 @@ package Squad5.API_FSPH.Lote.service;
 import Squad5.API_FSPH.Amostra.entity.Amostra;
 import Squad5.API_FSPH.Amostra.repository.AmostraRepository;
 import Squad5.API_FSPH.Lote.controller.CreateLoteDto;
+import Squad5.API_FSPH.Lote.controller.UpdateLoteDto;
 import Squad5.API_FSPH.Lote.entity.Lote;
 import Squad5.API_FSPH.Lote.repository.LoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,9 +35,8 @@ public class LoteService {
         Lote lote = new Lote();
         lote.setProtocoloLote(protocoloLote);
         lote.setLoteLamina(dto.loteLamina());
-        lote.setStatus("Criado"); // ou outro valor default
+        lote.setStatus("CADASTRADO");
         lote.setDataEnvio(dto.dataEnvio());
-        lote.setDataRecebimento(dto.dataRecebimento());
         lote.setDataCriacao(LocalDate.now());
         lote.setAmostras(amostras);
 
@@ -51,4 +53,58 @@ public class LoteService {
 
         return dataStr + "-" + sufixo;
     }
+
+    public Lote listarLote(String protocoloLote) {
+        return loteRepository.findByProtocoloLote(protocoloLote);
+    }
+
+    public Optional<Lote> atualizarLote(String protocoloLote, UpdateLoteDto dto) {
+        Optional<Lote> optionalLote = loteRepository.findById(protocoloLote);
+
+        if (optionalLote.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Lote lote = optionalLote.get();
+
+        if (dto.status() != null) {
+            lote.setStatus(dto.status());
+        }
+
+        if (dto.dataEnvio() != null) {
+            lote.setDataEnvio(dto.dataEnvio());
+        }
+
+        if (dto.dataRecebimento() != null) {
+            lote.setDataRecebimento(dto.dataRecebimento());
+        }
+
+        loteRepository.save(lote);
+
+        return Optional.of(lote);
+    }
+
+    public Optional<Lote> atualizarListaAmostras(String protocoloLote, List<String> amostrasId) {
+        Optional<Lote> optionalLote = loteRepository.findById(protocoloLote);
+
+        if (optionalLote.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Lote lote = optionalLote.get();
+
+        List<Amostra> amostras = amostrasId.isEmpty()
+                ? Collections.emptyList()
+                : amostraRepository.findAllById(amostrasId);
+
+        if (amostras.size() != amostrasId.size()) {
+            throw new IllegalArgumentException("Algumas amostras não foram encontradas.");
+        }
+
+        lote.setAmostras(amostras); // Remove todas se vier vazio
+        loteRepository.save(lote);
+
+        return Optional.of(lote);
+    }
+
 }

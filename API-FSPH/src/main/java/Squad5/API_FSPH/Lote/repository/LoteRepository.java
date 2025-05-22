@@ -11,4 +11,5 @@ public interface LoteRepository extends JpaRepository<Lote, String> {
 
     long countByDataCriacao(LocalDate dataCriacao);
 
+    Lote findByProtocoloLote(String protocoloLote);
 }
