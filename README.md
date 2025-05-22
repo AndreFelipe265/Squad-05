@@ -5,9 +5,10 @@ Colocar o arquivo ApiFsphApplication.java para rodar no intellij
 ## Amostra
 
 #### link pra Amostra metodo POST: http://localhost:8080/api/amostras
-A amostra tem que ser mandada como uma lista entre [] e esse mesmo metodo pode ser usado para mandar varias amostras de uma vez  
+Esse mesmo metodo pode ser usado para mandar varias amostras de uma vez  
 json:  
-{  
+[  
+    {  
         "tipo": "LARVAS",  
         "localCaptura": "Área urbana",  
         "enderecoCaptura": "Rua das Travecias, Centro",  
@@ -15,7 +16,8 @@ json:
         "municipioId": "e1a5f084-21cb-4d2b-a1d4-cd3c3f4f4e2f",  
         "municipioNome": "Juazeiro",  
         "protocoloLote": "PROTO-JZN-000789"  
-}  
+    }  
+]  
 #### link pra Amostra metodo GET: http://localhost:8080/api/amostras/{protocoloAmostra}
 
 #### link pra todas as Amostras metodo GET: http://localhost:8080/api/amostras/todas
