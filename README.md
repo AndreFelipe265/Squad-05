@@ -1,7 +1,7 @@
 # Squad-05
 Abrir o arquivo API-FSPH como projeto no intellij  
 Colocar o arquivo ApiFsphApplication.java para rodar no intellij  
-Usar os links abaixo no POSTMAN para teste  
+Usar os links abaixo no POSTMAN para teste ou abrir o Swagger: http://localhost:8080/swagger-ui/index.html  
 
 ## Amostra
 
