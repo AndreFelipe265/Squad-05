@@ -1,6 +1,7 @@
 # Squad-05
 Abrir o arquivo API-FSPH como projeto no intellij  
-Colocar o arquivo ApiFsphApplication.java para rodar no intellij
+Colocar o arquivo ApiFsphApplication.java para rodar no intellij  
+Usar os links abaixo no POSTMAN para teste  
 
 ## Amostra
 
