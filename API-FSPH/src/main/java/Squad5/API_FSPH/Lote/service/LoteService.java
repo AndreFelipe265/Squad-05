@@ -107,4 +107,21 @@ public class LoteService {
         return Optional.of(lote);
     }
 
+    public boolean deletarLote(String protocoloLote) {
+        Optional<Lote> optionalLote = loteRepository.findById(protocoloLote);
+
+        if (optionalLote.isPresent()) {
+            Lote lote = optionalLote.get();
+
+            if (lote.getAmostras() != null && !lote.getAmostras().isEmpty()) {
+                throw new IllegalStateException("O lote não pode ser excluído porque possui amostras associadas.");
+            }
+
+            loteRepository.delete(lote);
+            return true;
+        }
+
+        return false;
+    }
+
 }

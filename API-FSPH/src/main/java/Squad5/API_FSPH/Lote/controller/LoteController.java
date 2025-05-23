@@ -66,5 +66,20 @@ public class LoteController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    // Endpoint para a Exclusão do Lote
+    @DeleteMapping("/{protocoloLote}")
+    public ResponseEntity<String> deletarLote(@PathVariable String protocoloLote) {
+        try {
+            boolean deletado = loteService.deletarLote(protocoloLote);
+            if (deletado) {
+                return ResponseEntity.noContent().build(); // 204 No Content
+            } else {
+                return ResponseEntity.notFound().build(); // 404 Not Found
+            }
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage()); // 400 Bad Request com mensagem explicativa
+        }
+    }
+
 
 }
