@@ -62,5 +62,5 @@ json:
   "amostrasId": []  
 }  
 
-#### link pra Lote metodo DELETE:
+#### link pra Lote metodo DELETE: http://localhost:8080/api/lotes/{protocoloLote}
 
