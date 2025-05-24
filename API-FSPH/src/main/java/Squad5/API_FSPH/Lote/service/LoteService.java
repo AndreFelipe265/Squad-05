@@ -1,11 +1,13 @@
 package Squad5.API_FSPH.Lote.service;
 
 import Squad5.API_FSPH.Amostra.entity.Amostra;
+import Squad5.API_FSPH.Amostra.entity.Tipo;
 import Squad5.API_FSPH.Amostra.repository.AmostraRepository;
 import Squad5.API_FSPH.Lote.controller.CreateLoteDto;
 import Squad5.API_FSPH.Lote.controller.UpdateLoteDto;
 import Squad5.API_FSPH.Lote.entity.Lote;
 import Squad5.API_FSPH.Lote.repository.LoteRepository;
+import Squad5.API_FSPH.exception.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,7 @@ public class LoteService {
                 .collect(Collectors.toList());
 
         String protocoloLote = gerarProtocoloLote();
+        validarTiposDeAmostras(amostras);
 
         // Atualiza o campo protocoloLote em cada amostra
         for (Amostra amostra : amostras) {
@@ -132,5 +135,16 @@ public class LoteService {
         return false;
     }
 
-    /** Adicionar validação de lamina aqui no Lote */
+    private void validarTiposDeAmostras(List<Amostra> amostras) {
+        boolean contemLaminaPCE = amostras.stream()
+                .anyMatch(a -> a.getTipo() == Tipo.LAMINAS_PCE);
+
+        boolean contemOutroTipo = amostras.stream()
+                .anyMatch(a -> a.getTipo() != Tipo.LAMINAS_PCE);
+
+        if (contemLaminaPCE && contemOutroTipo) {
+            throw new BusinessRuleException("Amostras do tipo LAMINAS_PCE não podem ser misturadas com outros tipos no mesmo lote.");
+        }
+    }
+
 }
