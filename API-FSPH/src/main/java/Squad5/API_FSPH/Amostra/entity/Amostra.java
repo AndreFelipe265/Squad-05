@@ -35,8 +35,7 @@ public class Amostra {
     private String municipioNome;
 
     @Column(name = "protocolo_lote")
-    private String protocoloLote;
-    /** fazer add o protocolo do lote quando a amostra for cadastrada em um */
+    private String protocoloLote; // campo de protocolo de lote é adicionando quando uma amostra é cadastrada a um lote
 
     @Column(name = "status")
     private String status; // Status atual da amostra (ex: CADASTRADA, PRAZO_EXCEDIDO)

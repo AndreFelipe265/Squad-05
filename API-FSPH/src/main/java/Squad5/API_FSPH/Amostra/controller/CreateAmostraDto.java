@@ -13,6 +13,6 @@ public record CreateAmostraDto(
         @NotBlank String enderecoCaptura,     // Endereço da coleta da amostra
         @NotBlank String dataCaptura,         // Data da coleta no formato ISO (yyyy-MM-dd)
         @NotNull UUID municipioId,            // ID do município
-        @NotBlank String municipioNome,       // Nome do município
-        @NotBlank String protocoloLote        /** retirar daq pq sera adicionado automaticamente */
+        @NotBlank String municipioNome        // Nome do município
+
 ) {}

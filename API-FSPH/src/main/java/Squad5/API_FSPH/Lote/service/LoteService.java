@@ -32,6 +32,14 @@ public class LoteService {
 
         String protocoloLote = gerarProtocoloLote();
 
+        // Atualiza o campo protocoloLote em cada amostra
+        for (Amostra amostra : amostras) {
+            amostra.setProtocoloLote(protocoloLote);
+        }
+
+        // Salva as alterações nas amostras
+        amostraRepository.saveAll(amostras);
+
         Lote lote = new Lote();
         lote.setProtocoloLote(protocoloLote);
         lote.setLoteLamina(dto.loteLamina());
@@ -124,4 +132,5 @@ public class LoteService {
         return false;
     }
 
+    /** Adicionar validação de lamina aqui no Lote */
 }

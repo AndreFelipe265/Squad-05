@@ -33,7 +33,6 @@ public class AmostraService {
     @Transactional
     public Amostra criarAmostra(CreateAmostraDto dto) {
         validarDados(dto);
-        validarLaminasPCE(dto.protocoloLote(), dto.tipo());
 
         Amostra amostra = new Amostra();
         amostra.setProtocoloAmostra(gerarProtocolo());
@@ -43,7 +42,6 @@ public class AmostraService {
         amostra.setDataCaptura(LocalDate.parse(dto.dataCaptura()));
         amostra.setMunicipioId(dto.municipioId());
         amostra.setMunicipioNome(dto.municipioNome());
-        amostra.setProtocoloLote(dto.protocoloLote());
         amostra.setStatus("CADASTRADA");
 
         verificarPrazos(amostra);
@@ -125,22 +123,7 @@ public class AmostraService {
         if (LocalDate.parse(dto.dataCaptura()).isAfter(LocalDate.now())) {
             throw new BusinessRuleException("Data de captura não pode ser futura");
         }
-        if (dto.protocoloLote() == null || dto.protocoloLote().isBlank()) {
-            throw new BusinessRuleException("Protocolo do lote é obrigatório");
-        }
-    }
 
-    /** mudar essa validação para o Lote */
-    private void validarLaminasPCE(String protocoloLote, Tipo tipo) {
-        if (tipo == Tipo.LAMINAS_PCE) {
-            if (amostraRepository.existsByProtocoloLoteAndTipoNot(protocoloLote, Tipo.LAMINAS_PCE)) {
-                throw new BusinessRuleException("Lâminas PCE não podem estar no mesmo lote que outros tipos");
-            }
-        } else {
-            if (amostraRepository.existsByProtocoloLoteAndTipo(protocoloLote, Tipo.LAMINAS_PCE)) {
-                throw new BusinessRuleException("Não é possível adicionar este tipo ao lote (já contém Lâminas PCE)");
-            }
-        }
     }
 
     private void verificarPrazos(Amostra amostra) {

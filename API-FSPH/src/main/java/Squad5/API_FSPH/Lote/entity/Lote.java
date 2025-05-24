@@ -26,10 +26,10 @@ public class Lote {
     private String status; // Status do lote como um total
 
     @Column(name = "data_envio")
-    private LocalDate dataEnvio;
+    private LocalDate dataEnvio; // data que o Lote sera enviado ao LACEN
 
     @Column(name = "data_recebimento_lote")
-    private LocalDate dataRecebimento;
+    private LocalDate dataRecebimento; // adicionada por PATCH quando for recebida pelo LACEN
 
     @Column(name = "data_criacao")
     private LocalDate dataCriacao = LocalDate.now(); // Data de criação do Lote
@@ -40,7 +40,7 @@ public class Lote {
             joinColumns = @JoinColumn(name = "lote_id"),
             inverseJoinColumns = @JoinColumn(name = "amostra_id")
     )
-    private List<Amostra> amostras = new ArrayList<>();
+    private List<Amostra> amostras = new ArrayList<>(); // Lista de Amostras pertencentes a essa Lote
 
     public Lote() {
     }
