@@ -15,8 +15,7 @@ json:
         "enderecoCaptura": "Rua das Travecias, Centro",  
         "dataCaptura": "2025-05-21",  
         "municipioId": "e1a5f084-21cb-4d2b-a1d4-cd3c3f4f4e2f",  
-        "municipioNome": "Juazeiro",  
-        "protocoloLote": "PROTO-JZN-000789"  
+        "municipioNome": "Juazeiro"  
     }  
 ]  
 #### link pra Amostra metodo GET: http://localhost:8080/api/amostras/{protocoloAmostra}
