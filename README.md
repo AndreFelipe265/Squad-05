@@ -39,7 +39,6 @@ json:
 {  
   "loteLamina": false,  
   "dataEnvio": "2025-05-20",  
-  "dataRecebimento": "2025-05-21",  
   "amostrasId": [  
     "212025-00001",  
     "212025-00002"  
@@ -49,6 +48,7 @@ json:
 #### link pra Lote metodo GET: http://localhost:8080/api/lotes/{protocoloLote}
 
 #### link pra Lote (status, dataEnvio e dataRecebimento) metodo PATCH: http://localhost:8080/api/lotes/{protocoloLote}
+É possivel alterar cada um individualmente nesse Link  
 json:  
 {  
   "status": "ENVIADO",  
@@ -57,10 +57,12 @@ json:
 }  
 
 #### link pra Lote (lista de amostras) metodo PATCH: http://localhost:8080/api/lotes/{protocoloLote}/amostras
+Link para alterar apenas a lista de Amostras de um Lote pode ser usado pra remover e adicionar amostras  
 json:  
 {  
   "amostrasId": []  
 }  
 
 #### link pra Lote metodo DELETE: http://localhost:8080/api/lotes/{protocoloLote}
+Deleta o Lote apenas quando n tiver mais amostras dentro dele  
 
