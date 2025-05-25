@@ -137,10 +137,10 @@ public class LoteService {
 
     private void validarTiposDeAmostras(List<Amostra> amostras) {
         boolean contemLaminaPCE = amostras.stream()
-                .anyMatch(a -> a.getTipo() == Tipo.LAMINAS_PCE);
+                .anyMatch(a -> a.getTipo() == Tipo.LAMINA_PCE);
 
         boolean contemOutroTipo = amostras.stream()
-                .anyMatch(a -> a.getTipo() != Tipo.LAMINAS_PCE);
+                .anyMatch(a -> a.getTipo() != Tipo.LAMINA_PCE);
 
         if (contemLaminaPCE && contemOutroTipo) {
             throw new BusinessRuleException("Amostras do tipo LAMINAS_PCE não podem ser misturadas com outros tipos no mesmo lote.");

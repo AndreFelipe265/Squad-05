@@ -58,8 +58,15 @@ public class AmostraService {
         List<Amostra> amostrasCriadas = new ArrayList<>();
 
         for (CreateAmostraDto dto : dtos) {
-            Amostra amostraCriada = criarAmostra(dto);
-            amostrasCriadas.add(amostraCriada);
+            try {
+                Amostra amostraCriada = criarAmostra(dto); // Aqui o protocolo é gerado internamente
+                amostrasCriadas.add(amostraCriada);
+            } catch (BusinessRuleException e) {
+                // Identificação baseada nos campos disponíveis no DTO
+                String info = "Tipo: " + dto.tipo() + ", Local: " + dto.localCaptura()
+                        + ", Data: " + dto.dataCaptura() + ", Município: " + dto.municipioNome();
+                throw new BusinessRuleException("Erro ao criar amostra (" + info + "). " + e.getMessage());
+            }
         }
 
         return amostrasCriadas;
@@ -155,7 +162,7 @@ public class AmostraService {
                 }
                 break;
 
-            case LAMINAS_PCE:
+            case LAMINA_PCE:
                 if (diasDiferenca > 7) {
                     throw new BusinessRuleException("Lâminas PCE devem ser enviadas semanalmente (até 7 dias)");
                 }

@@ -2,6 +2,7 @@ package Squad5.API_FSPH.Lote.controller;
 
 import Squad5.API_FSPH.Lote.entity.Lote;
 import Squad5.API_FSPH.Lote.service.LoteService;
+import Squad5.API_FSPH.exception.BusinessRuleException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,9 +23,13 @@ public class LoteController {
 
     // Endpoint para criação de Lote
     @PostMapping
-    public ResponseEntity<Lote> criarLote(@RequestBody CreateLoteDto dto) {
-        Lote novoLote = loteService.criarLote(dto);
-        return ResponseEntity.ok(novoLote);
+    public ResponseEntity<?> criarLote(@RequestBody CreateLoteDto dto) {
+        try {
+            Lote novoLote = loteService.criarLote(dto);
+            return ResponseEntity.ok(novoLote);
+        } catch (BusinessRuleException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     // Endpoint para buscar um Lote por protocolo

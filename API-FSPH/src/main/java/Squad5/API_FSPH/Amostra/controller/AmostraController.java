@@ -28,9 +28,15 @@ public class AmostraController {
     // Endpoint para criação de amostras.
     @PostMapping
     @Operation(summary = "Criar amostras de uma vez")
-    public ResponseEntity<List<Amostra>> criarAmostras(@RequestBody List<CreateAmostraDto> dtos) {
-        List<Amostra> salvas = amostraService.criarAmostras(dtos);
-        return ResponseEntity.status(HttpStatus.CREATED).body(salvas);
+    public ResponseEntity<?> criarAmostras(@RequestBody List<CreateAmostraDto> dtos) {
+        try {
+            List<Amostra> salvas = amostraService.criarAmostras(dtos);
+            return ResponseEntity.status(HttpStatus.CREATED).body(salvas);
+        } catch (BusinessRuleException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Erro: " + e.getMessage());
+        }
     }
 
     //Gabriel Almeida esteve aqui

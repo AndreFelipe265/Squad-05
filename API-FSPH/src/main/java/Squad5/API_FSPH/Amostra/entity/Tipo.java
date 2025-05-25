@@ -8,5 +8,5 @@ public enum Tipo {
     CARRAPATO,
     ESCORPIAO,
     LARVAS,
-    LAMINAS_PCE
+    LAMINA_PCE
 }
