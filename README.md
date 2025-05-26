@@ -65,3 +65,5 @@ json:
 #### link pra Lote metodo DELETE: http://localhost:8080/api/lotes/{protocoloLote}
 Deleta o Lote apenas quando n tiver mais amostras dentro dele  
 
+## Autenticação JWT
+
