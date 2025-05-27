@@ -3,6 +3,7 @@ package Squad5.API_FSPH.Lote.controller;
 import Squad5.API_FSPH.Lote.entity.Lote;
 import Squad5.API_FSPH.Lote.service.LoteService;
 import Squad5.API_FSPH.exception.BusinessRuleException;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ public class LoteController {
 
     // Endpoint para criação de Lote
     @PostMapping
+    @Operation(summary = "Criar Lote")
     public ResponseEntity<?> criarLote(@RequestBody CreateLoteDto dto) {
         try {
             Lote novoLote = loteService.criarLote(dto);
@@ -34,6 +36,7 @@ public class LoteController {
 
     // Endpoint para buscar um Lote por protocolo
     @GetMapping("/{protocoloLote}")
+    @Operation(summary = "Busca lotes por protocolo")
     public ResponseEntity<?> listarLote(@PathVariable String protocoloLote) {
         Lote lote = loteService.listarLote(protocoloLote);
 
@@ -48,6 +51,7 @@ public class LoteController {
 
     // Endpoint para atualizar o Lote (status, dataEnvio e dataRecebimento)
     @PatchMapping("/{protocoloLote}")
+    @Operation(summary = "Atualiza os status, dataEnvio e dataRecebimento do lote")
     public ResponseEntity<?> atualizarStatusEData(
             @PathVariable String protocoloLote,
             @RequestBody UpdateLoteDto dto
@@ -60,6 +64,7 @@ public class LoteController {
     }
     // Endpoint para atualizar o Lote (Lista de Amostras)
     @PatchMapping("/{protocoloLote}/amostras")
+    @Operation(summary = "Atualiza a lista de amostras do lote")
     public ResponseEntity<?> atualizarAmostrasLote(
             @PathVariable String protocoloLote,
             @RequestBody UpdateListaDto dto
@@ -73,6 +78,7 @@ public class LoteController {
 
     // Endpoint para a Exclusão do Lote
     @DeleteMapping("/{protocoloLote}")
+    @Operation(summary = "Deleta o lote por protocolo")
     public ResponseEntity<String> deletarLote(@PathVariable String protocoloLote) {
         try {
             boolean deletado = loteService.deletarLote(protocoloLote);

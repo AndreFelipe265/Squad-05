@@ -42,7 +42,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Permite OPTIONS para todos
                         .anyRequest().authenticated()
                 )
-                .headers(headers -> headers.frameOptions().disable()); // Para permitir H2 Console
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin())); // Para permitir H2 Console
 
         return http.build();
     }
