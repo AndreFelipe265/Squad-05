@@ -37,7 +37,8 @@ public class SecurityConfig {
                                 "/swagger-resources/**",
                                 "/webjars/**",
                                 "/auth/login",
-                                "/auth/register"
+                                "/auth/register",
+                                "/user"
                         ).permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Permite OPTIONS para todos
                         .anyRequest().authenticated()
