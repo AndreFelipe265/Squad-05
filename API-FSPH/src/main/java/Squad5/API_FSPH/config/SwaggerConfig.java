@@ -49,4 +49,12 @@ public class SwaggerConfig {
                 .pathsToMatch("/api/lotes/**")
                 .build();
     }
+
+    @Bean
+    public GroupedOpenApi loginApi() {
+        return GroupedOpenApi.builder()
+                .group("Login")
+                .pathsToMatch("/auth/**", "/user/**")
+                .build();
+    }
 }
