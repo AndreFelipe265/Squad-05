@@ -50,9 +50,25 @@ Você pode usar o **Swagger UI** ou o **Postman** para testar os endpoints.
       "tipo": "LARVAS",
       "localCaptura": "Área urbana",
       "enderecoCaptura": "Rua das Travecias, Centro",
-      "dataCaptura": "2025-05-29",
-      "municipioId": "e1a5f084-21cb-4d2b-a1d4-cd3c3f4f4e2f",
+      "dataCaptura": "2025-05-30",
+      "municipioId": "d3e4f678-1a23-4bcd-9ef0-9987ab123456",
       "municipioNome": "Juazeiro"
+    },
+    {
+      "tipo": "ESCORPIAO",
+      "localCaptura": "Área urbana",
+      "enderecoCaptura": "Avenida Central, Bairro São José",
+      "dataCaptura": "2025-05-30",
+      "municipioId": "e1a5f084-21cb-4d2b-a1d4-cd3c3f4f4e2f",
+      "municipioNome": "Petrolina"
+    },
+    {
+      "tipo": "CARRAPATO",
+      "localCaptura": "Zona rural",
+      "enderecoCaptura": "Fazenda Esperança, Estrada Velha",
+      "dataCaptura": "2025-05-30",
+      "municipioId": "b5f6a789-0cde-4ef1-b234-abc123ef4567",
+      "municipioNome": "Remanso"
     }
   ]
   ```
