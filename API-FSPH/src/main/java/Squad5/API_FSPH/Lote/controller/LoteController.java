@@ -56,11 +56,15 @@ public class LoteController {
             @PathVariable String protocoloLote,
             @RequestBody UpdateLoteDto dto
     ) {
-        Optional<Lote> updatedLote = loteService.atualizarLote(protocoloLote, dto);
-
-        return updatedLote
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        try {
+            Optional<Lote> updatedLote = loteService.atualizarLote(protocoloLote, dto);
+            return updatedLote
+                    .map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.notFound().build());
+        } catch (IllegalStateException e) {
+            // Retorna erro 400 com a mensagem personalizada
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
     // Endpoint para atualizar o Lote (Lista de Amostras)
     @PatchMapping("/{protocoloLote}/amostras")
@@ -69,11 +73,14 @@ public class LoteController {
             @PathVariable String protocoloLote,
             @RequestBody UpdateListaDto dto
     ) {
-        Optional<Lote> updatedLote = loteService.atualizarListaAmostras(protocoloLote, dto.amostrasId());
-
-        return updatedLote
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        try {
+            Optional<Lote> updatedLote = loteService.atualizarListaAmostras(protocoloLote, dto.amostrasId());
+            return updatedLote
+                    .map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.notFound().build());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     // Endpoint para a Exclusão do Lote

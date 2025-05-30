@@ -78,6 +78,11 @@ public class LoteService {
 
         Lote lote = optionalLote.get();
 
+        // 🚫 Verifica se o status é ENVIADO
+        if ("ENVIADO".equalsIgnoreCase(lote.getStatus())) {
+            throw new IllegalStateException("Não é possível modificar um lote com status ENVIADO.");
+        }
+
         if (dto.status() != null) {
             lote.setStatus(dto.status());
         }
@@ -103,6 +108,11 @@ public class LoteService {
         }
 
         Lote lote = optionalLote.get();
+
+        // 🚫 Verifica se o status é ENVIADO
+        if ("ENVIADO".equalsIgnoreCase(lote.getStatus())) {
+            throw new IllegalStateException("Não é possível modificar as amostras de um lote com status ENVIADO.");
+        }
 
         List<Amostra> amostras = amostrasId.isEmpty()
                 ? Collections.emptyList()

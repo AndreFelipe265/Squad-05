@@ -38,7 +38,8 @@ public class SecurityConfig {
                                 "/webjars/**",
                                 "/auth/login",
                                 "/auth/register",
-                                "/user"
+                                "/user",
+                                "/laudo/**"
                         ).permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Permite OPTIONS para todos
                         .anyRequest().authenticated()
