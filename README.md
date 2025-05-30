@@ -65,5 +65,15 @@ json:
 #### link pra Lote metodo DELETE: http://localhost:8080/api/lotes/{protocoloLote}
 Deleta o Lote apenas quando n tiver mais amostras dentro dele  
 
+## Laudo
+
+#### link pra Amostra metodo POST: http://localhost:8080/laudo/upload/{protocoloLote}
+Usado para mandar um arquivo PDF contendo o Laudo do Lote
+
+#### link pra Amostra metodo GET: http://localhost:8080/laudo/download/{id}
+Usado para baixar o arquivo anexado ao Lote
+
 ## Autenticação JWT
+
+
 
