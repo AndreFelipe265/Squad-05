@@ -50,7 +50,7 @@ Você pode usar o **Swagger UI** ou o **Postman** para testar os endpoints.
       "tipo": "LARVAS",
       "localCaptura": "Área urbana",
       "enderecoCaptura": "Rua das Travecias, Centro",
-      "dataCaptura": "2025-05-21",
+      "dataCaptura": "2025-05-29",
       "municipioId": "e1a5f084-21cb-4d2b-a1d4-cd3c3f4f4e2f",
       "municipioNome": "Juazeiro"
     }
@@ -72,7 +72,7 @@ Você pode usar o **Swagger UI** ou o **Postman** para testar os endpoints.
 
   ```json
   {
-    "status": "Concluída",
+    "status": "CONCLUIDA",
     "observacao": "Amostra analisada sem anomalias."
   }
   ```
@@ -88,10 +88,10 @@ Você pode usar o **Swagger UI** ou o **Postman** para testar os endpoints.
   ```json
   {
     "loteLamina": false,
-    "dataEnvio": "2025-05-20",
+    "dataEnvio": "2025-05-30",
     "amostrasId": [
-      "212025-00001",
-      "212025-00002"
+      "292025-00001",
+      "292025-00002"
     ]
   }
   ```
@@ -106,8 +106,8 @@ Você pode usar o **Swagger UI** ou o **Postman** para testar os endpoints.
   ```json
   {
     "status": "ENVIADO",
-    "dataEnvio": "2025-05-21",
-    "dataRecebimento": "2025-05-22"
+    "dataEnvio": "2025-05-31",
+    "dataRecebimento": "2025-05-31"
   }
   ```
 
